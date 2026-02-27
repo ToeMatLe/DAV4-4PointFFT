@@ -1,5 +1,5 @@
 module butterfly #(
-parameter WIDTH = 32;
+    parameter int WIDTH = 32
 )(
     input signed [WIDTH-1:0] A,
     input signed [WIDTH-1:0] B,
@@ -7,7 +7,7 @@ parameter WIDTH = 32;
     output signed [WIDTH-1:0] out0,
     output signed [WIDTH-1:0] out1
 );
-    localparam HALF = WIDTH/2;
+    localparam int HALF = WIDTH/2;
     logic signed [HALF-1: 0] A_real, B_real, W_real, A_imag, B_imag, W_imag;
     // Split the inputs into half real and half imaginary parts
     assign A_real = A[WIDTH-1:HALF];
@@ -23,6 +23,6 @@ parameter WIDTH = 32;
     assign temp_real = B_real * W_real - B_imag * W_imag;
     assign temp_imag = B_real * W_imag + B_imag * W_real
 
-    assign out0 = {A_real + temp_real, A_imag + temp_imag}; // out0 = A + B*W
-    assign out1 = {A_real - temp_real, A_imag - temp_imag}; // out1 = A - B*W
+    assign out0 = {(A_real + temp_real)[HALF-1:0], (A_imag + temp_imag)[HALF-1:0]}; // out0 = A + B*W
+    assign out1 = {(A_real - temp_real)[HALF-1:0], (A_imag - temp_imag)[HALF-1:0]}; // out1 = A - B*W
 endmodule
