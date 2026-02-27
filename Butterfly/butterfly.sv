@@ -23,6 +23,14 @@ module butterfly #(
     assign temp_real = B_real * W_real - B_imag * W_imag;
     assign temp_imag = B_real * W_imag + B_imag * W_real
 
-    assign out0 = {(A_real + temp_real)[HALF-1:0], (A_imag + temp_imag)[HALF-1:0]}; // out0 = A + B*W
-    assign out1 = {(A_real - temp_real)[HALF-1:0], (A_imag - temp_imag)[HALF-1:0]}; // out1 = A - B*W
+    logic signed [HALF-1:0] out0_real, out0_imag;
+    logic signed [HALF-1:0] out1_real, out1_imag;
+
+    assign out0_real = A_real + temp_real;
+    assign out0_imag = A_imag + temp_imag;
+    assign out1_real = A_real - temp_real;
+    assign out1_imag = A_imag - temp_imag;
+
+    assign out0 = {out0_real, out0_imag};
+    assign out1 = {out1_real, out1_imag};
 endmodule
