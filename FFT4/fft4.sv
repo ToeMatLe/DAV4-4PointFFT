@@ -14,11 +14,11 @@ module fft4 #(
     output signed [WIDTH-1:0] out2,
     output signed [WIDTH-1:0] out3
 );
-    // Define the twiddle factors for N=4
-    localparam signed [WIDTH-1:0] W0 = {16'h0001, 16'h0000}; // W^0 = 1 + j0  = 1
-    localparam signed [WIDTH-1:0] W1 = {16'h0000, 16'hFFFF}; // W^1 = 0 - j1  = -j1
-    localparam signed [WIDTH-1:0] W2 = {16'hFFFF, 16'h0000}; // W^2 = -1 + j0 = -1
-    localparam signed [WIDTH-1:0] W3 = {16'h0000, 16'h0001}; // W^3 = 0 + j1  = j1
+    // Twiddles (scaled by 2^15) 
+    localparam logic signed [WIDTH-1:0] W0 = {16'sd32767,  16'sd0};          //  1
+    localparam logic signed [WIDTH-1:0] W1 = {16'sd0,     -16'sd32768};      // -j
+    localparam logic signed [WIDTH-1:0] W2 = {-16'sd32768, 16'sd0};          // -1
+    localparam logic signed [WIDTH-1:0] W3 = {16'sd0,      16'sd32767};      // +j
 
     // Create FSM for the 4 stages of the FFT
     typedef enum logic [1:0] { 

@@ -29,7 +29,9 @@ initial clk = 0;;
 always #10 clk = ~clk;
 
 initial begin 
+    
     $display("");
+    $finish;
 end
 
 
