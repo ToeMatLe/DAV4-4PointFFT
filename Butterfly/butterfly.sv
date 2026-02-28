@@ -19,11 +19,18 @@ module butterfly #(
 
     // Perform the butterfly operation
     // B*W = (B_real + jB_imag)(W_real + jW_imag) = (B_real*W_real - B_imag*W_imag) + j(B_real*W_imag + B_imag*W_real)
-    // Q1.15 rescale: >> 15 (drop 15 LSBs)
+   
     logic signed [WIDTH-1:0] temp_real, temp_imag;
     assign temp_real = B_real * W_real - B_imag * W_imag;
     assign temp_imag = B_real * W_imag + B_imag * W_real;
+    
+    logic signed [HALF:0] sum0_r, sum0_i, sum1_r, sum1_i;
+    // Has 1 extra bit for potential overflow, so take bits [HALF+14:15] for correct scaling
+    assign sum0_r = A_real + temp_real[HALF+14:15]; 
+    assign sum0_i = A_imag + temp_imag[HALF+14:15];
+    assign sum1_r = A_real - temp_real[HALF+14:15];
+    assign sum1_i = A_imag - temp_imag[HALF+14:15];
 
-    assign out0 = {(A_real + temp_real)[30:15], (A_imag + temp_imag)[30:15]}; // out0 = A + B*W
-    assign out1 = {(A_real - temp_real)[30:15], (A_imag - temp_imag)[30:15]}; // out1 = A - B*W
+    assign out0 = {sum0_r, sum0_i};
+    assign out1 = {sum1_r, sum1_i};
 endmodule
