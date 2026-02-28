@@ -7,7 +7,7 @@ module butterfly #(
     output signed [WIDTH-1:0] out0,
     output signed [WIDTH-1:0] out1
 );
-    localparam intHALF = WIDTH/2;
+    localparam int HALF = WIDTH/2;
     logic signed [HALF-1: 0] A_real, B_real, W_real, A_imag, B_imag, W_imag;
     // Split the inputs into half real and half imaginary parts
     assign A_real = A[WIDTH-1:HALF];
@@ -19,10 +19,11 @@ module butterfly #(
 
     // Perform the butterfly operation
     // B*W = (B_real + jB_imag)(W_real + jW_imag) = (B_real*W_real - B_imag*W_imag) + j(B_real*W_imag + B_imag*W_real)
+    // Q1.15 rescale: >> 15 (drop 15 LSBs)
     logic signed [WIDTH-1:0] temp_real, temp_imag;
     assign temp_real = B_real * W_real - B_imag * W_imag;
     assign temp_imag = B_real * W_imag + B_imag * W_real;
 
-    assign out0 = {A_real + temp_real, A_imag + temp_imag}; // out0 = A + B*W
-    assign out1 = {A_real - temp_real, A_imag - temp_imag}; // out1 = A - B*W
+    assign out0 = {(A_real + temp_real)[30:15], (A_imag + temp_imag)[30:15]}; // out0 = A + B*W
+    assign out1 = {(A_real - temp_real)[30:15], (A_imag - temp_imag)[30:15]}; // out1 = A - B*W
 endmodule

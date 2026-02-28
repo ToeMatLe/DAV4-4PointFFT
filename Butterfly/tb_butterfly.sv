@@ -14,8 +14,8 @@ butterfly #(.WIDTH(WIDTH)) dut (
     .out1(out1)
 );
 task automatic test(
-    input signed [HALF-1:0] A_real, A_imag, B_real, B_imag, W_real, W_imag, 
-    input signed [HALF-1:0] expected_out0_real, expected_out0_imag, expected_out1_real, expected_out1_imag
+    input logic signed [HALF-1:0] A_real, A_imag, B_real, B_imag, W_real, W_imag, 
+    input logic signed [HALF-1:0] expected_out0_real, expected_out0_imag, expected_out1_real, expected_out1_imag
     ); 
     begin 
         A = {A_real, A_imag};
