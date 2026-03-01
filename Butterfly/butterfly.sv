@@ -30,9 +30,13 @@ module butterfly #(
     assign temp_imag = mult_ad + mult_bc;
 
     // Scale back to 16 bits with rounding (add 0.5 in fixed-point)
-    logic signed [HALF-1:0] bw_real, bw_imag;
-    assign bw_real = ((temp_real + (1 <<< 14)) >>> 15)[HALF-1:0];
-    assign bw_imag = ((temp_imag + (1 <<< 14)) >>> 15)[HALF-1:0];
+    logic signed [2*HALF-1:0] bw_real_full, bw_imag_full;
+    logic signed [HALF-1:0]   bw_real, bw_imag;
+
+    assign bw_real_full = (temp_real + (1 <<< 14)) >>> 15;
+    assign bw_imag_full = (temp_imag + (1 <<< 14)) >>> 15;
+    assign bw_real = bw_real_full[HALF-1:0];
+    assign bw_imag = bw_imag_full[HALF-1:0];
 
     // 17-bit add/sub then pack
     logic signed [HALF:0] sum0_r, sum0_i, sum1_r, sum1_i;
